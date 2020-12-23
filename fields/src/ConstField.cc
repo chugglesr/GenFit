@@ -24,18 +24,6 @@
 #include <string>
 
 namespace genfit {
-
-TVector3 ConstField::get(const TVector3& pos) const {
-     
-    TVector3 tmp(0,0,15);// kGauss
-    std::string hold = "F";
-    std::string name2(1, gGeoManager->FindNode(pos[0],pos[1],pos[2])->GetName()[0]);
-    name2.c_str();
-    if (name2.c_str()==hold) tmp.SetZ(15);//150
-    return tmp;
-    /* return field_; */
-}
-
 /*
 void ConstField::get(const double&, const double&, const double&, double& Bx, double& By, double& Bz) const {
   Bx = field_.X();
@@ -43,23 +31,24 @@ void ConstField::get(const double&, const double&, const double&, double& Bx, do
   Bz = field_.Z();
 }
 */
+
 ///
 /*
 void ConstField::get(const double& posX, const double& posY, const double& posZ, double& Bx, double& By, double& Bz) const {
-
     //non-uniform
     TVector3 tmp(0,0,15);//kGauss
-    std::string hold = "F";
+    std::string hold = "i";
     std::string name2;
     gGeoManager->FindNode(posX,posY,posZ);
     if(gGeoManager->FindNode(posX,posY,posZ)){
-        gGeoManager->FindNode(posX,posY,posZ)->GetName()[0];
-        std::string name3(1, gGeoManager->FindNode(posX,posY,posZ)->GetName()[0]);
+        //gGeoManager->FindNode(posX,posY,posZ)->GetName()[0];
+	std::string name3(1, gGeoManager->FindNode(posX,posY,posZ)->GetName()[0]);
         name2 = name3;
         name2.c_str();
+	//std::cout << name2.c_str() << std::endl;
         if (name2.c_str()==hold){
-            // std::cout << "posX " << posX << std::endl; 
-            // std::cout << "1.5 T" << std::endl; 
+            std::cout << "posX =" << posX <<"\t posY =" << posY
+	              <<"\t posZ =" << posZ << std::endl; 
             Bx = tmp.X();
             By = tmp.Y();
             Bz = tmp.Z();
@@ -73,15 +62,20 @@ void ConstField::get(const double& posX, const double& posY, const double& posZ,
     // Bx = field_.X(); 
     // By = field_.Y(); 
     // Bz = field_.Z(); 
+}*/
+
+
+TVector3 ConstField::get(const TVector3& pos) const {
+     
+    TVector3 tmp(0,0,15);// kGauss
+    std::string hold = "i";
+    std::string name2(1, gGeoManager->FindNode(pos[0],pos[1],pos[2])->GetName()[0]);
+    name2.c_str();
+    if (name2.c_str()==hold) tmp.SetZ(0);//kGauss
+    return tmp;
+    // return field_; 
 }
-*/
-//
-//
 
-
-
-////KENJI/////
-///*
 void ConstField::get(const double& posX, const double& posY, const double& posZ, double& Bx, double& By, double& Bz) const {
 
 //non-uniform
@@ -113,45 +107,65 @@ void ConstField::get(const double& posX, const double& posY, const double& posZ,
   Bx=0;
   By=0;
   Bz=0;
+  std::string hold = "i";
+  std::string name2;
 
-  //gGeoManager->FindNode(posX,posY,posZ); 
-  //if(gGeoManager->FindNode(posX,posY,posZ))
+  if(gGeoManager->FindNode(posX,posY,posZ)){
+	std::string name3(1, gGeoManager->FindNode(posX,posY,posZ)->GetName()[0]);
+        name2 = name3;
+        //name2.c_str();
+        //std::cout << name2.c_str() << std::endl;
+        if (name2.c_str()==hold){ 
+	    double x = posX;
+      	    double y = posY;
+     	    double z = posZ;
+     	    std::cout << x << " " << y << " " << z << std::endl;
+	    if(x>Xmin&&x<Xmax&&y>Ymin1&&y<Ymax1&&z>Zmin&&z<Zmax){
+		for(int i=0; i<33; i++){
+		  if(x>z_iron[i]-3./2&&x<z_iron[i]+3./2){
+		    Bx = 0;
+		    By = 0;
+		    Bz = -tmp.Z();
+		    std::cout << "+" << std::endl;
+		  }
+		}
+	      }
 
-      double x = posX;
-      double y = posY;
-      double z = posZ;
+           if(x>Xmin&&x<Xmax&&y>Ymin2&&y<Ymax2&&z>Zmin&&z<Zmax){
+		for(int i=0; i<33; i++){
+		  if(x>z_iron[i]-3.0/2&&x<z_iron[i]+3.0/2){
+		    Bx = 0;
+		    By = 0;
+		    Bz = tmp.Z();
+		    		    std::cout << "-" << std::endl;
+		  }
+		}
+	      }
 
-      if(x>Xmin&&x<Xmax&&y>Ymin1&&y<Ymax1&&z>Zmin&&z<Zmax){
-	for(int i=0; i<33; i++){
-	  if(x>z_iron[i]-3./2&&x<z_iron[i]+3./2){
-	    Bx = 0;
-	    By = 0;
-	    Bz = -tmp.Z();
-	  }
-	}
-      }
+           if(x>Xmin&&x<Xmax&&y>Ymin3&&y<Ymax3&&z>Zmin&&z<Zmax){
+		for(int i=0; i<33; i++){
+		  if(x>z_iron[i]-3.0/2&&x<z_iron[i]+3.0/2){
+		    Bx = 0;
+		    By = 0;
+		    Bz = -tmp.Z();
+		    		    std::cout << "+" << std::endl;
+		  }
+		}
+	      }
+	   else { 
+             Bx = 0;
+             By = 0;
+             Bz = 0;
+ 	   }
 
-      if(x>Xmin&&x<Xmax&&y>Ymin2&&y<Ymax2&&z>Zmin&&z<Zmax){
-	for(int i=0; i<33; i++){
-	  if(x>z_iron[i]-3.0/2&&x<z_iron[i]+3.0/2){
-	    Bx = 0;
-	    By = 0;
-	    Bz = tmp.Z();
-	  }
-	}
-      }
+        }
 
-      if(x>Xmin&&x<Xmax&&y>Ymin3&&y<Ymax3&&z>Zmin&&z<Zmax){
-	for(int i=0; i<33; i++){
-	  if(x>z_iron[i]-3.0/2&&x<z_iron[i]+3.0/2){
-	    Bx = 0;
-	    By = 0;
-	    Bz = -tmp.Z();
-	  }
-	}
-      }      
 
+  }
+  else { 
+            Bx = 0;
+            By = 0;
+            Bz = 0;
+  }
 }
-//*/
-
 } // End of namespace genfit 
