@@ -284,7 +284,7 @@ void EventDisplay::drawEvent(unsigned int id, bool resetCam) {
       TGeoVolume* volume = dynamic_cast<TGeoVolume*>(volumes->At(i));
       assert(volume != nullptr);
       volume->SetLineColor(12);
-      volume->SetTransparency(50);
+      volume->SetTransparency(90); //Transparency of volume objects, originally 50
     }
 
     TEveGeoTopNode* eve_top_node = new TEveGeoTopNode(gGeoManager, top_node);
