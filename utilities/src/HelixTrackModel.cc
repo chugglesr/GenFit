@@ -22,6 +22,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <iostream>
 
 namespace genfit {
 
@@ -32,16 +33,22 @@ HelixTrackModel::HelixTrackModel(const TVector3& pos, const TVector3& mom, doubl
   TVector3 B = genfit::FieldManager::getInstance()->getFieldVal(pos);
 
   // B must point in Z direction
-  assert(B.X() == 0);
+  assert(B.Z() == 0);
   assert(B.Y() == 0);
+  double Bx = B.X();
+  //std::cout << "Field (" << Bx << ", " << B.Y() << ", " << B.Z() << ")" << std::endl;
+  //WIP
+  // B must point in X direction
+  // double By = B.Y();
+  // double Bz = B.Z();
+  // double Bx = B.X();
 
-  double Bz = B.Z();
-
+  //std::cout << "HelixField: (" << Bx << ", " << By << ", " << Bz << ")" << std::endl;
   // calc helix parameters
   TVector3 dir2D(mom);
   dir2D.SetZ(0);
   dir2D.SetMag(1.);
-  R_ = 100.*mom.Perp()/(0.0299792458*Bz) / fabs(charge);
+  R_ = 100.*mom.Perp()/(0.0299792458*Bx) / fabs(charge);
   sgn_ = 1;
   if (charge<0) sgn_=-1.;
   center_ = pos + sgn_ * R_ * dir2D.Orthogonal();
@@ -83,11 +90,11 @@ void HelixTrackModel::getPosMom(double tracklength, TVector3& pos, TVector3& mom
   mom.SetPhi(angle - sgn_*M_PI/2.);
   mom.SetMag(mom_);
 
-  /*std::cout<<"tracklength " << tracklength << "\n";
+  std::cout<<"GetPosMom from Helix track model~\ntracklength " << tracklength << "\n";
   std::cout<<"angle " << angle << "\n";
   std::cout<<"radius vector "; radius.Print();
   std::cout<<"pos "; pos.Print();
-  std::cout<<"mom "; mom.Print();*/
+  std::cout<<"mom "; mom.Print();
 
 }
 
