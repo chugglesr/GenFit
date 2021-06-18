@@ -36,6 +36,10 @@ namespace genfit {
  */
 class ConstField : public AbsBField {
  public:
+ 
+   //B2MagneticField
+//  B2MagneticField(const std::string& magfield_table_file_path);
+   
   //! define the constant field in this ctor
   ConstField(double b1, double b2, double b3)
     : field_(b1, b2, b3)
@@ -51,6 +55,13 @@ class ConstField : public AbsBField {
 
  private:
   TVector3 field_;
+  
+  //B2MagneticField
+  //const static std::size_t xbins_ = 251;
+  //const static std::size_t ybins_ = 201;
+
+  //double bx_[xbins_][ybins_]{}, by_[xbins_][ybins_]{}, bz_[xbins_][ybins_]{};
+  //double xmin_, xmax_, ymin_, ymax_, zmin_, zmax_;
 };
 
 } /* End of namespace genfit */
